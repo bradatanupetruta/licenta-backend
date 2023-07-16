@@ -15,25 +15,26 @@ public class ReportService {
 
     public List<SalesDTO> getSales(List<Order> orders) {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Map<String, Double> priceByDay = new HashMap<>();
+        Map<String, SalesDTO> priceByDay = new HashMap<>();
         for (Order order : orders) {
             String date = dateFormat.format(order.getDate());
             if (priceByDay.containsKey(date)) {
-                double price = priceByDay.get(date) + getTotal(order);
-                priceByDay.put(date, price);
+                SalesDTO salesDTO = priceByDay.get(date);
+                double price = salesDTO.getPriceOrder() + getTotal(order);
+                salesDTO.setPriceOrder(price);
+                priceByDay.put(date, salesDTO);
             } else {
-                priceByDay.put(date, getTotal(order));
+                SalesDTO salesDTO = new SalesDTO();
+                salesDTO.setDateOfOrder(order.getDate());
+                salesDTO.setPriceOrder(getTotal(order));
+                salesDTO.setOrderDate(date);
+                priceByDay.put(date, salesDTO);
             }
         }
 
         List<SalesDTO> sales = new ArrayList<>();
-        for (Map.Entry<String, Double> entry : priceByDay.entrySet()) {
-            SalesDTO salesDTO = new SalesDTO();
-            salesDTO.setOrderDate(entry.getKey());
-            salesDTO.setPriceOrder(entry.getValue());
-            sales.add(salesDTO);
-        }
-        sales.sort(Comparator.comparing(SalesDTO::getOrderDate));
+        sales.addAll(priceByDay.values());
+        sales.sort(Comparator.comparing(SalesDTO::getDateOfOrder));
         return sales;
     }
 
@@ -65,7 +66,7 @@ public class ReportService {
 
     public List<SalesDTO> getIngredientSales(List<Order> orders, Long id) {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Map<String, Double> ingredientByDate = new HashMap<>();
+        Map<String, SalesDTO> ingredientByDate = new HashMap<>();
         for (Order order : orders) {
             if (!order.getProducts().isEmpty()) {
                 String date = dateFormat.format(order.getDate());
@@ -75,10 +76,16 @@ public class ReportService {
                     double ingredientQuantity = getIngredientQuantity(orderProduct.getProduct().getIngredients(), id);
                     if (ingredientQuantity != 0) {
                         if (ingredientByDate.containsKey(date)) {
-                            double quantity = ingredientByDate.get(date) + ingredientQuantity * numberOfProducts;
-                            ingredientByDate.put(date, quantity);
+                            SalesDTO salesDTO = ingredientByDate.get(date);
+                            double quantity = salesDTO.getIngredientQuantity() + ingredientQuantity * numberOfProducts;
+                            salesDTO.setIngredientQuantity(quantity);
+                            ingredientByDate.put(date, salesDTO);
                         } else {
-                            ingredientByDate.put(date, ingredientQuantity * numberOfProducts);
+                            SalesDTO salesDTO = new SalesDTO();
+                            salesDTO.setIngredientQuantity(ingredientQuantity * numberOfProducts);
+                            salesDTO.setOrderDate(date);
+                            salesDTO.setDateOfOrder(order.getDate());
+                            ingredientByDate.put(date, salesDTO);
                         }
                     }
                 }
@@ -86,13 +93,8 @@ public class ReportService {
         }
 
         List<SalesDTO> sales = new ArrayList<>();
-        for (Map.Entry<String, Double> entry : ingredientByDate.entrySet()) {
-            SalesDTO salesDTO = new SalesDTO();
-            salesDTO.setOrderDate(entry.getKey());
-            salesDTO.setIngredientQuantity(entry.getValue());
-            sales.add(salesDTO);
-        }
-        sales.sort(Comparator.comparing(SalesDTO::getOrderDate));
+        sales.addAll(ingredientByDate.values());
+        sales.sort(Comparator.comparing(SalesDTO::getDateOfOrder));
         return sales;
     }
 

@@ -75,7 +75,7 @@ public class OrderController {
 
 
     @GetMapping("/ingredient-sale/{id}")
-    public List<SalesDTO> getSalesByCategory(@PathVariable("id") Long id) {
+    public List<SalesDTO> getSalesByIngredient(@PathVariable("id") Long id) {
         List<Order> orders = orderService.getAll();
         List<SalesDTO> result = reportService.getIngredientSales(orders, id);
         return result;

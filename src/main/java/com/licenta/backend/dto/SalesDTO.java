@@ -1,5 +1,7 @@
 package com.licenta.backend.dto;
 
+import java.util.Date;
+
 public class SalesDTO {
 
     private String orderDate;
@@ -7,6 +9,8 @@ public class SalesDTO {
     private String category;
     private int categoryQuantity;
     private double ingredientQuantity;
+
+    private Date dateOfOrder;
 
     public String getOrderDate() {
         return orderDate;
@@ -46,5 +50,13 @@ public class SalesDTO {
 
     public void setIngredientQuantity(double ingredientQuantity) {
         this.ingredientQuantity = ingredientQuantity;
+    }
+
+    public Date getDateOfOrder() {
+        return dateOfOrder;
+    }
+
+    public void setDateOfOrder(Date dateOfOrder) {
+        this.dateOfOrder = dateOfOrder;
     }
 }

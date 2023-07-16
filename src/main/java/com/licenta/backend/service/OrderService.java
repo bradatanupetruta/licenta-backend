@@ -40,7 +40,7 @@ public class OrderService {
         List<OrderProduct> savedOrderProducts = saveOrderProducts(order, orderDTO.getProducts());
         order.setServer(user);
         order.setTable(tab);
-        order.setDate(new Date());
+        order.setDate(changeDay(new Date()));
         order.setStatus(orderDTO.getStatus());
         order.setProducts(savedOrderProducts);
         return orderRepository.save(order);
@@ -69,6 +69,7 @@ public class OrderService {
     public List<OrderStatusDTO> getOrderStatus() {
         List<OrderStatusDTO> result = new ArrayList<>();
         List<Order> orders = getAll();
+        orders.sort(Comparator.comparing((Order::getDate)).reversed());
         for (Order order : orders) {
             OrderStatusDTO orderStatus = new OrderStatusDTO();
             orderStatus.setOrderId(order.getOrderid());
@@ -225,7 +226,7 @@ public class OrderService {
     private Date changeDay(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.set(Calendar.DATE, -1);
+        calendar.add(Calendar.DATE, 6);
         return calendar.getTime();
     }
 }
