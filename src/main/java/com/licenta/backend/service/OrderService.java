@@ -40,7 +40,7 @@ public class OrderService {
         List<OrderProduct> savedOrderProducts = saveOrderProducts(order, orderDTO.getProducts());
         order.setServer(user);
         order.setTable(tab);
-        order.setDate(changeDay(new Date()));
+        order.setDate(new Date());
         order.setStatus(orderDTO.getStatus());
         order.setProducts(savedOrderProducts);
         return orderRepository.save(order);
