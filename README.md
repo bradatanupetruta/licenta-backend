@@ -1,4 +1,4 @@
-Soluția informatică de față își propune să ofere atât un mecanism de eficientizare a gestiunii activității comerciale a restaurantelor, cât și o modalitate de a organiza afacerea și personalul într-un mod bine definit.
+Soluția informatică dezolvotată folosind Java, SpringBoot, React și JavaScript își propune să ofere atât un mecanism de eficientizare a gestiunii activității comerciale a restaurantelor, cât și o modalitate de a organiza afacerea și personalul într-un mod bine definit.
 
 Cerințele de bază care trebuie îndeplinite de sistemul informatic sunt:
 
